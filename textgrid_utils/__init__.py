@@ -72,6 +72,11 @@ def merge_main():
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
 
+    merge_and_mark_tiers(
+        tg_file=args.input_file,
+        output_file=args.output_file,
+        tiers=args.tiers)
+
 
 if __name__ == '__main__':
     merge_main()
