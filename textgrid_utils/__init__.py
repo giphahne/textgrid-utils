@@ -51,7 +51,16 @@ def merge_and_mark_tiers(tg_file="", output_file="", tiers=()):
         tg.write(f)
 
 
-if __name__ == '__main__':
+def merge_main():
+    """Entry point for the application script"""
+
+    import sys
+    import argparse
+    import json
+    from functools import partial
+
+    import argcomplete
+
     description = ""
     parser = argparse.ArgumentParser(usage=None, description=description)
 
@@ -60,6 +69,9 @@ if __name__ == '__main__':
     parser.add_argument(
         "--tiers", type=str, nargs="+", help=("tiers to merge and mark."))
 
+    argcomplete.autocomplete(parser)
     args = parser.parse_args()
 
-    print(vars(args))
+
+if __name__ == '__main__':
+    merge_main()
