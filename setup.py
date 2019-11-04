@@ -9,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='textgrid_utils',
-    version='0.0.2',
+    version='0.0.3',
     description='utilities for working with textgrid files',
     url='https://github.com/giphahne/textgrid-utils',
     author='Dan Hahne',

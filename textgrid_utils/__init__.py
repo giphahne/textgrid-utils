@@ -19,29 +19,26 @@ def validate_overlapping_tiers(t1, t2):
                         t1name=t1.name, i1=i1, t2name=t2.name, i2=i2))
 
 
-input_file = "data/049PR_Vidal_Covas_QP1_Trial.TextGrid"
-output_file = "data/Merged_049PR_Vidal_Covas_QP1_Trial.TextGrid"
-
-
 def merge_and_mark_tiers(tg_file="", output_file="", tiers=()):
-
+    """
+    Creates a new TextGrid file with an added IntervalTier.
+    """
     tg = textgrid.TextGrid()
     tg.read(f=tg_file)
 
     for t1_name, t2_name in combinations(tiers, 2):
-        validate_overlapping_tiers(
-            tg.getFirst('Lexical'), tg.getFirst('Phonological'))
+        validate_overlapping_tiers(tg.getFirst(t1_name), tg.getFirst(t2_name))
 
     merged_tier = IntervalTier(
         name="Merged",
-        minTime=min(list(lambda x: x.minTime for x in tiers)),
-        maxTime=min(list(lambda x: x.maxTime for x in tiers)))
+        minTime=min(map(lambda x: tg.getFirst(x).minTime, tiers)),
+        maxTime=min(map(lambda x: tg.getFirst(x).maxTime, tiers)))
 
     for tier_name, interval in filter(
             lambda x: x[1].mark,
-            chain(
-                zip(repeat(t1.name), iter(t1)), zip(repeat(t2.name),
-                                                    iter(t2)))):
+            chain.from_iterable(
+                map(lambda x: zip(repeat(x.name), iter(x)),
+                    map(lambda t: tg.getFirst(t), tiers)))):
         merged_tier.addInterval(
             Interval(
                 minTime=interval.minTime,
