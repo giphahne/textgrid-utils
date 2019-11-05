@@ -24,7 +24,7 @@ setup(
     ],
     keywords='linguistics textgrid praat',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-    install_requires=['argcomplete'],
+    install_requires=['argcomplete', 'textgrid'],
     package_data={
         '': ['package_data.dat'],
     },
