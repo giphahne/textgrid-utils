@@ -55,11 +55,14 @@ def copy_tiers(source_file="", target_file="", tiers=()):
     """
     Copies given Tiers from source to target
     """
-    source_tg = textgrid.TextGrid().read(f=source_file)
-    target_tg = textgrid.TextGrid().read(f=target_file)
+    source_tg = textgrid.TextGrid()
+    source_tg.read(f=source_file)
+
+    target_tg = textgrid.TextGrid()
+    target_tg.read(f=target_file)
 
     for tier in tiers:
-        target_tg.addInterval(source_tg.getFirst(tier))
+        target_tg.tiers.append(source_tg.getFirst(tier))
 
     with open(target_file, "w") as f:
         target_tg.write(f)
@@ -69,13 +72,24 @@ def remove_tiers(target_file="", tiers=()):
     """
     Remove given Tiers from target
     """
-    target_tg = textgrid.TextGrid().read(f=target_file)
+    target_tg = textgrid.TextGrid()
+    target_tg.read(f=target_file)
 
     for tier in tiers:
-        target_tg.pop(target_tg.getNames().index(tier))
+        try:
+            target_tg.pop(target_tg.getNames().index(tier))
+        except ValueError:
+            continue
 
     with open(target_file, "w") as f:
         target_tg.write(f)
+
+
+def list_tiers(tg_file):
+    #print(tg_file)
+    target_tg = textgrid.TextGrid()
+    target_tg.read(f=tg_file)
+    print(target_tg.getNames())
 
 
 def merge_main():
@@ -120,11 +134,11 @@ def copy_tiers_main():
 
     parser.add_argument(
         "-i",
-        "--source-file",
+        "--source",
         type=str,
         help=("Search this Textgrid file for Tiers of the "
               "given Name"))
-    parser.add_argument("-o", "--target-file", type=str, help=(""))
+    parser.add_argument("-o", "--target", type=str, help=(""))
     parser.add_argument(
         "--tiers",
         type=str,
@@ -139,7 +153,7 @@ def copy_tiers_main():
         source_file=args.source, target_file=args.target, tiers=args.tiers)
 
 
-def remove_tier_main():
+def remove_tiers_main():
     """Entry point for the application script"""
 
     import sys
@@ -154,6 +168,7 @@ def remove_tier_main():
 
     parser.add_argument("-f", "--file", type=str, help=("textgrid file"))
     parser.add_argument(
+        "-t",
         "--tiers",
         type=str,
         nargs="+",
@@ -163,7 +178,28 @@ def remove_tier_main():
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
 
-    remove_tiers(tg_file=args.target, tiers=args.tiers)
+    remove_tiers(target_file=args.file, tiers=args.tiers)
+
+
+def list_main():
+    """Entry point for the application script"""
+
+    import sys
+    import argparse
+    import json
+    from functools import partial
+
+    import argcomplete
+
+    description = ""
+    parser = argparse.ArgumentParser(usage=None, description=description)
+
+    parser.add_argument("file", type=str, help=("textgrid file"))
+
+    argcomplete.autocomplete(parser)
+    args = parser.parse_args()
+
+    list_tiers(tg_file=args.file)
 
 
 if __name__ == '__main__':
