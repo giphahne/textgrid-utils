@@ -51,6 +51,33 @@ def merge_and_mark_tiers(tg_file="", output_file="", tiers=()):
         tg.write(f)
 
 
+def copy_tiers(source_file="", target_file="", tiers=()):
+    """
+    Copies given Tiers from source to target
+    """
+    source_tg = textgrid.TextGrid().read(f=source_file)
+    target_tg = textgrid.TextGrid().read(f=target_file)
+
+    for tier in tiers:
+        target_tg.addInterval(source_tg.getFirst(tier))
+
+    with open(target_file, "w") as f:
+        target_tg.write(f)
+
+
+def remove_tiers(target_file="", tiers=()):
+    """
+    Remove given Tiers from target
+    """
+    target_tg = textgrid.TextGrid().read(f=target_file)
+
+    for tier in tiers:
+        target_tg.pop(target_tg.getNames().index(tier))
+
+    with open(target_file, "w") as f:
+        target_tg.write(f)
+
+
 def merge_main():
     """Entry point for the application script"""
 
@@ -76,6 +103,67 @@ def merge_main():
         tg_file=args.input_file,
         output_file=args.output_file,
         tiers=args.tiers)
+
+
+def copy_tiers_main():
+    """Entry point for the application script"""
+
+    import sys
+    import argparse
+    import json
+    from functools import partial
+
+    import argcomplete
+
+    description = ""
+    parser = argparse.ArgumentParser(usage=None, description=description)
+
+    parser.add_argument(
+        "-i",
+        "--source-file",
+        type=str,
+        help=("Search this Textgrid file for Tiers of the "
+              "given Name"))
+    parser.add_argument("-o", "--target-file", type=str, help=(""))
+    parser.add_argument(
+        "--tiers",
+        type=str,
+        nargs="+",
+        help=("tiers to copy from "
+              "source to target"))
+
+    argcomplete.autocomplete(parser)
+    args = parser.parse_args()
+
+    copy_tiers(
+        source_file=args.source, target_file=args.target, tiers=args.tiers)
+
+
+def remove_tier_main():
+    """Entry point for the application script"""
+
+    import sys
+    import argparse
+    import json
+    from functools import partial
+
+    import argcomplete
+
+    description = ""
+    parser = argparse.ArgumentParser(usage=None, description=description)
+
+    parser.add_argument("-f", "--file", type=str, help=("textgrid file"))
+    parser.add_argument(
+        "--tiers",
+        type=str,
+        nargs="+",
+        help=("tiers to copy from "
+              "source to target"))
+
+    argcomplete.autocomplete(parser)
+    args = parser.parse_args()
+
+    remove_tiers(tg_file=args.target, tiers=args.tiers)
 
 
 if __name__ == '__main__':

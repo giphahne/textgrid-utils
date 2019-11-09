@@ -31,6 +31,8 @@ setup(
     entry_points={
         'console_scripts': [
             'merge-and-mark-textgrid-tiers=textgrid_utils:merge_main',
+            'tg-copy-tiers=textgrid_utils:copy_tiers_main',
+            'tg-remove-tiers=textgrid_utils:remove_tiers_main',
         ],
     },
 )
