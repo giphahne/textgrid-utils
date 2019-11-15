@@ -34,18 +34,30 @@ def merge_and_mark_tiers(tg_file="", output_file="", tiers=()):
         minTime=min(map(lambda x: tg.getFirst(x).minTime, tiers)),
         maxTime=min(map(lambda x: tg.getFirst(x).maxTime, tiers)))
 
+    marked_tier = IntervalTier(
+        name="Marked",
+        minTime=min(map(lambda x: tg.getFirst(x).minTime, tiers)),
+        maxTime=min(map(lambda x: tg.getFirst(x).maxTime, tiers)))
+
     for tier_name, interval in filter(
             lambda x: x[1].mark,
             chain.from_iterable(
                 map(lambda x: zip(repeat(x.name), iter(x)),
                     map(lambda t: tg.getFirst(t), tiers)))):
-        merged_tier.addInterval(
+        marked_tier.addInterval(
             Interval(
                 minTime=interval.minTime,
                 maxTime=interval.maxTime,
                 mark=tier_name))
 
-    tg.tiers.insert(1, merged_tier)
+        merged_tier.addInterval(
+            Interval(
+                minTime=interval.minTime,
+                maxTime=interval.maxTime,
+                mark=interval.mark))
+
+    tg.tiers.insert(1, marked_tier)
+    tg.tiers.insert(2, merged_tier)
 
     with open(output_file, "w") as f:
         tg.write(f)

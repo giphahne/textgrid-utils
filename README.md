@@ -8,6 +8,9 @@ $ pip install textgrid-utils
 Add (optional) auto-complete for CLI usage:
 ```bash
 $ eval "$(register-python-argcomplete merge-and-mark-textgrid-tiers)"
+$ eval "$(register-python-argcomplete tg-copy-tiers)"
+$ eval "$(register-python-argcomplete tg-remove-tiers)"
+$ eval "$(register-python-argcomplete tg-list-tiers)"
 ```
 
 Command line usage:
