@@ -19,7 +19,7 @@ def validate_overlapping_tiers(t1, t2):
                         t1name=t1.name, i1=i1, t2name=t2.name, i2=i2))
 
 
-def merge_tiers(tg_file="", output_file="", tiers=()):
+def merge_and_mark_tiers(tg_file="", output_file="", tiers=()):
     """
     Creates a new TextGrid file with an added IntervalTier.
     """
