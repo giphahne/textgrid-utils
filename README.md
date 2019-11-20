@@ -7,7 +7,7 @@ $ pip install textgrid-utils
 
 Add (optional) auto-complete for CLI usage:
 ```bash
-$ eval "$(register-python-argcomplete merge-and-mark-textgrid-tiers)"
+$ eval "$(register-python-argcomplete tg-merge-and-mark-tiers)"
 $ eval "$(register-python-argcomplete tg-copy-tiers)"
 $ eval "$(register-python-argcomplete tg-remove-tiers)"
 $ eval "$(register-python-argcomplete tg-list-tiers)"
@@ -15,7 +15,7 @@ $ eval "$(register-python-argcomplete tg-list-tiers)"
 
 Command line usage:
 ```bash
-$ merge-and-mark-textgrid-tiers \
+$ tg-merge-and-mark-tiers \
 	  -i trial_data.TextGrid \
 	  -o trial_data_merged.TextGrid \
 	  --tiers Phonological Lexical
