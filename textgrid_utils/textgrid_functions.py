@@ -1,3 +1,4 @@
+import json
 from io import BytesIO
 from itertools import chain
 from itertools import repeat
@@ -148,4 +149,19 @@ def list_tiers(tg_file):
     #print(tg_file)
     target_tg = textgrid.TextGrid()
     target_tg.read(f=tg_file)
-    print(target_tg.getNames())
+    print(json.dumps(target_tg.getNames()))
+
+
+def rename_tier(tg_file, current_name, new_name):
+    """
+    Rename Tier in TextGrid file.
+    """
+    tg = textgrid.TextGrid.fromFile(f=tg_file)
+
+    current_idx = tg.getNames().index(current_name)
+    tier = tg.pop(current_idx)
+    tier.name = new_name
+    tg.tiers.insert(current_idx, tier)
+
+    with open(tg_file, "w") as f:
+        tg.write(f)

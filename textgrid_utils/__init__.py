@@ -3,11 +3,12 @@ from io import BytesIO
 
 import argcomplete
 
-from textgrid_functions import add_type_tier
-from textgrid_functions import merge_and_mark_tiers
-from textgrid_functions import copy_tiers
-from textgrid_functions import remove_tiers
-from textgrid_functions import list_tiers
+from textgrid_utils.textgrid_functions import add_type_tier
+from textgrid_utils.textgrid_functions import merge_and_mark_tiers
+from textgrid_utils.textgrid_functions import copy_tiers
+from textgrid_utils.textgrid_functions import remove_tiers
+from textgrid_utils.textgrid_functions import list_tiers
+from textgrid_utils.textgrid_functions import rename_tier
 
 
 def add_type_tier_main():
@@ -128,9 +129,14 @@ def rename_tier_main():
     description = ""
     parser = argparse.ArgumentParser(usage=None, description=description)
 
-    parser.add_argument("file", type=str, help=("textgrid file"))
+    parser.add_argument("--file", type=str, help=("textgrid file"))
+    parser.add_argument("--current-name", type=str, help=("tier name"))
+    parser.add_argument("--new-name", type=str, help=("tier name"))
 
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
 
-    list_tiers(tg_file=args.file)
+    rename_tier(
+        tg_file=args.file,
+        current_name=args.current_name,
+        new_name=args.new_name)
