@@ -7,29 +7,48 @@ $ pip install textgrid-utils
 
 Add (optional) auto-complete for CLI usage:
 ```bash
-$ eval "$(register-python-argcomplete tg-merge-and-mark-tiers)"
+
+$ eval "$(register-python-argcomplete tg-add-type-tier)"
+$ eval "$(register-python-argcomplete tg-add-merged-tier)"
 $ eval "$(register-python-argcomplete tg-copy-tiers)"
 $ eval "$(register-python-argcomplete tg-remove-tiers)"
 $ eval "$(register-python-argcomplete tg-list-tiers)"
+$ eval "$(register-python-argcomplete tg-rename-tier)"
+
 ```
 
-Command line usage:
+Command line usage (optionally: install jq for pretty-printing):
 ```bash
-$ tg-merge-and-mark-tiers \
-	  -i trial_data.TextGrid \
-	  -o trial_data_merged.TextGrid \
-	  --tiers Phonological Lexical
+
+$ tg-list-tiers orig.TextGrid | jq .
+
+$ tg-add-type-tier \
+	-i tg_file.TextGrid \
+	--tiers Phonological Lexical \
+	--new-tier-name "Type"
+
+$ tg-list-tiers orig.TextGrid | jq .
+
+$ tg-add-merged-tier \
+	-i tg_file.TextGrid \
+	--tiers Phonological Lexical \
+	--new-tier-name "Merged"
+
+$ tg-list-tiers orig.TextGrid | jq .
+
 ```
 
 
 Library usage:
 
 ```python
-from textgrid_utils import merge_and_mark_tiers
+from textgrid_utils import add_type_tier
 
-merge_and_mark_tiers(
+add_type_tier(
 	tg_file="<path/to/input/file>",
-	output_file="<path/to/output/file>",
-	tiers=('Phonlogical', 'Lexical'))
+	tiers=('Phonlogical', 'Lexical'),
+	inplace=True,
+	new_tier_name="Type")
+	
 ```
 
