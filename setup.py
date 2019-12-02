@@ -9,7 +9,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='textgrid_utils',
-    version='1.0.3',
+    version='2.0.0',
     description='utilities for working with textgrid files',
     url='https://github.com/giphahne/textgrid-utils',
     author='Dan Hahne',
@@ -30,10 +30,12 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'tg-merge-and-mark-tiers=textgrid_utils:merge_main',
+            'tg-add-type-tier=textgrid_utils:add_type_tier_main',
+            'tg-merge-tiers=textgrid_utils:merge_main',
             'tg-copy-tiers=textgrid_utils:copy_tiers_main',
             'tg-remove-tiers=textgrid_utils:remove_tiers_main',
             'tg-list-tiers=textgrid_utils:list_main',
+            'tg-rename-tier=textgrid_utils:rename_tier_main',
         ],
     },
 )
