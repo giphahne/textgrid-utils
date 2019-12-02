@@ -31,7 +31,7 @@ setup(
     entry_points={
         'console_scripts': [
             'tg-add-type-tier=textgrid_utils:add_type_tier_main',
-            'tg-merge-tiers=textgrid_utils:merge_main',
+            'tg-add-merged-tier=textgrid_utils:add_merged_tier_main',
             'tg-copy-tiers=textgrid_utils:copy_tiers_main',
             'tg-remove-tiers=textgrid_utils:remove_tiers_main',
             'tg-list-tiers=textgrid_utils:list_main',

@@ -20,23 +20,17 @@ def _validate_overlapping_tiers(t1, t2):
                         t1name=t1.name, i1=i1, t2name=t2.name, i2=i2))
 
 
-def add_type_tier(tg_file="", tiers=(), inplace=False):
+def add_type_tier(tg_file="", tiers=(), inplace=False, new_tier_name="Type"):
     """
-    Creates a new TextGrid file with an added IntervalTier.
+    Adds an IntervalTier to TextGrid file.
     """
-    tg = textgrid.TextGrid()
-    tg.read(f=tg_file)
+    tg = textgrid.TextGrid.fromFile(f=tg_file)
 
     for t1_name, t2_name in combinations(tiers, 2):
         _validate_overlapping_tiers(tg.getFirst(t1_name), tg.getFirst(t2_name))
 
-    # merged_tier = IntervalTier(
-    #     name="Merged",
-    #     minTime=min(map(lambda x: tg.getFirst(x).minTime, tiers)),
-    #     maxTime=min(map(lambda x: tg.getFirst(x).maxTime, tiers)))
-
     marked_tier = IntervalTier(
-        name="Type",
+        name=new_tier_name,
         minTime=min(map(lambda x: tg.getFirst(x).minTime, tiers)),
         maxTime=min(map(lambda x: tg.getFirst(x).maxTime, tiers)))
 
@@ -51,52 +45,38 @@ def add_type_tier(tg_file="", tiers=(), inplace=False):
                 maxTime=interval.maxTime,
                 mark=tier_name))
 
-        # merged_tier.addInterval(
-        #     Interval(
-        #         minTime=interval.minTime,
-        #         maxTime=interval.maxTime,
-        #         mark=interval.mark))
-
     tg.tiers.insert(1, marked_tier)
-    #    tg.tiers.insert(2, merged_tier)
 
     if inplace:
         with open(tg_file, "w") as f:
             tg.write(f)
     else:
         pass
+        #sys.stdout.write()
 
 
-def merge_and_mark_tiers(tg_file="", output_file="", tiers=()):
+def add_merged_tier(tg_file="",
+                    tiers=(),
+                    inplace=False,
+                    new_tier_name="Merged"):
     """
-    Creates a new TextGrid file with an added IntervalTier.
+    Adds an IntervalTier to TextGrid file.
     """
-    tg = textgrid.TextGrid()
-    tg.read(f=tg_file)
+    tg = textgrid.TextGrid.fromFile(f=tg_file)
 
     for t1_name, t2_name in combinations(tiers, 2):
         _validate_overlapping_tiers(tg.getFirst(t1_name), tg.getFirst(t2_name))
 
     merged_tier = IntervalTier(
-        name="Merged",
+        name=new_tier_name,
         minTime=min(map(lambda x: tg.getFirst(x).minTime, tiers)),
         maxTime=min(map(lambda x: tg.getFirst(x).maxTime, tiers)))
-
-    # marked_tier = IntervalTier(
-    #     name="Marked",
-    #     minTime=min(map(lambda x: tg.getFirst(x).minTime, tiers)),
-    #     maxTime=min(map(lambda x: tg.getFirst(x).maxTime, tiers)))
 
     for tier_name, interval in filter(
             lambda x: x[1].mark,
             chain.from_iterable(
                 map(lambda x: zip(repeat(x.name), iter(x)),
                     map(lambda t: tg.getFirst(t), tiers)))):
-        # marked_tier.addInterval(
-        #     Interval(
-        #         minTime=interval.minTime,
-        #         maxTime=interval.maxTime,
-        #         mark=tier_name))
 
         merged_tier.addInterval(
             Interval(
@@ -104,11 +84,14 @@ def merge_and_mark_tiers(tg_file="", output_file="", tiers=()):
                 maxTime=interval.maxTime,
                 mark=interval.mark))
 
-    #tg.tiers.insert(1, marked_tier)
     tg.tiers.insert(1, merged_tier)
 
-    with open(output_file, "w") as f:
-        tg.write(f)
+    if inplace:
+        with open(tg_file, "w") as f:
+            tg.write(f)
+    else:
+        pass
+        #sys.stdout.write()
 
 
 def copy_tiers(source_file="", target_file="", tiers=()):
@@ -146,6 +129,9 @@ def remove_tiers(target_file="", tiers=()):
 
 
 def list_tiers(tg_file):
+    """
+    List tiers in JSON format.
+    """
     #print(tg_file)
     target_tg = textgrid.TextGrid()
     target_tg.read(f=tg_file)
